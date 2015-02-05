@@ -1,6 +1,6 @@
 # Introduction
 
-ServerTrack challenge.  Note the Dropwizard example application as a starting point for this project.
+ServerTrack challenge.  Note the Dropwizard example application was used as a starting point for this project.
 
 # Overview
 
