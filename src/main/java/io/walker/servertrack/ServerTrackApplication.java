@@ -38,7 +38,6 @@ public class ServerTrackApplication extends Application<ServerTrackConfiguration
             }
         });
         bootstrap.addBundle(hibernateBundle);
-        //bootstrap.addBundle(new ViewBundle());
     }
 
     @Override
