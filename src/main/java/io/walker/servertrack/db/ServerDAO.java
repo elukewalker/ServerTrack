@@ -7,7 +7,6 @@ import io.walker.servertrack.core.Server;
 
 import org.hibernate.SessionFactory;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 public class ServerDAO extends AbstractDAO<Server> {

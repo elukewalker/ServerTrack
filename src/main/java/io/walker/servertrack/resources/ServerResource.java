@@ -29,7 +29,6 @@ public class ServerResource {
     @GET
     @UnitOfWork
     @Timed
-    //public List<Server> getServer(@QueryParam("serverName") Optional<String> name) {
     public List<Server> getPerson(@PathParam("serverName") String name) {
         return findSafely(name);
     }

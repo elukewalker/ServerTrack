@@ -6,7 +6,6 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import io.dropwizard.views.ViewBundle;
 import io.walker.servertrack.core.Server;
 import io.walker.servertrack.db.ServerDAO;
 import io.walker.servertrack.resources.RecordsResource;
@@ -32,8 +31,6 @@ public class ServerTrackApplication extends Application<ServerTrackConfiguration
 
     @Override
     public void initialize(Bootstrap<ServerTrackConfiguration> bootstrap) {
-        //bootstrap.addCommand(new RenderCommand());
-        //bootstrap.addBundle(new AssetsBundle());
         bootstrap.addBundle(new MigrationsBundle<ServerTrackConfiguration>() {
             @Override
             public DataSourceFactory getDataSourceFactory(ServerTrackConfiguration configuration) {
@@ -41,7 +38,7 @@ public class ServerTrackApplication extends Application<ServerTrackConfiguration
             }
         });
         bootstrap.addBundle(hibernateBundle);
-        bootstrap.addBundle(new ViewBundle());
+        //bootstrap.addBundle(new ViewBundle());
     }
 
     @Override
