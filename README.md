@@ -47,7 +47,8 @@ To test the example application run the following commands.
 
 	curl -H "Content-Type: application/json" -X POST -d '{"serverName":"name","cpuLoad":"33.3","memLoad":"22.2"}' http://localhost:8080/records
 	
-	or type the following into the browser
+or type the following into the browser
+
 	http://localhost:8080/records?serverName=name&cpuLoad=33.3&memLoad=22.2
 	
 * To view server data.
