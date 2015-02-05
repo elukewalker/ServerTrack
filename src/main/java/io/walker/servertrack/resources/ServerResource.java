@@ -57,43 +57,12 @@ public class ServerResource {
     
     private List<Server> getAvgLoadByMinute(String serverName) {
     	final List<Server> samples = findSafely(serverName);
-    	CopyOnWriteArrayList<Server> list = new CopyOnWriteArrayList<Server>();
-    	
-    	if(samples != null && samples.size() > 0){
-    		ArrayList<Double> cpu = new ArrayList<Double>();
-    		ArrayList<Double> mem = new ArrayList<Double>();
-    		long currentSecond = samples.get(samples.size()-1).getTimestamp();
-    		
-    		for(int i=samples.size()-1; i >= 0; i--) {
-    			long diff = Math.abs(samples.get(i).getTimestamp() - currentSecond);
-    			if(diff < 1000*60){
-    				// Within the current second
-    				cpu.add(samples.get(i).getCpuLoad());
-    				mem.add(samples.get(i).getMemLoad());
-    			} else {
-    				// New second
-    				
-    				list.add(generate(cpu, mem, serverName, currentSecond));
-    				
-    				// Set new current second
-    				currentSecond = samples.get(i).getTimestamp();
-    				cpu.clear();
-    				mem.clear();
-    				cpu.add(samples.get(i).getCpuLoad());
-    				mem.add(samples.get(i).getMemLoad());
-    			}
-    		}
-    		// catch the case we are in the last second
-    		if(!cpu.isEmpty()){
-    			list.add(generate(cpu, mem, serverName, currentSecond));
-    		}
-    	}
-    	
-    	if(list.size() > 60){
-    		return list.subList(0, 61);
-    	} else {
-    		return list;
-    	}
+    	return getAvgLoadByPeriod(samples, serverName, 1000*60, 60);
+    }
+    
+    private List<Server> getAvgLoadByHour(String serverName) {
+    	final List<Server> samples = findSafely(serverName);
+    	return getAvgLoadByPeriod(samples, serverName, 1000*60*60, 24);
     }
     
     private Server generate(ArrayList<Double> cpu, ArrayList<Double> mem, String serverName, long currentSecond){
@@ -116,8 +85,7 @@ public class ServerResource {
 		return server;
     }
     
-    private List<Server> getAvgLoadByHour(String serverName) {
-    	final List<Server> samples = findSafely(serverName);
+    private List<Server> getAvgLoadByPeriod(List<Server> samples, String serverName, long period, int limit) {
     	CopyOnWriteArrayList<Server> list = new CopyOnWriteArrayList<Server>();
     	
     	if(samples != null && samples.size() > 0){
@@ -127,12 +95,13 @@ public class ServerResource {
     		
     		for(int i=samples.size()-1; i >= 0; i--) {
     			long diff = Math.abs(samples.get(i).getTimestamp() - currentSecond);
-    			if(diff < 1000*60*60){
+    			
+    			if(diff < period){	// Period of 1 hour
     				// Within the current second
     				cpu.add(samples.get(i).getCpuLoad());
     				mem.add(samples.get(i).getMemLoad());
     			} else {
-    				// New second
+    				// New period
     				
     				list.add(generate(cpu, mem, serverName, currentSecond));
     				
@@ -144,13 +113,13 @@ public class ServerResource {
     				mem.add(samples.get(i).getMemLoad());
     			}
     		}
-    		// catch the case we are in the last second
+    		// catch the case we are in the last period
     		if(!cpu.isEmpty()){
     			list.add(generate(cpu, mem, serverName, currentSecond));
     		}
     	}
-    	if(list.size() > 24){
-    		return list.subList(0, 25);
+    	if(list.size() > limit){
+    		return list.subList(0, limit+1);
     	} else {
     		return list;
     	}
